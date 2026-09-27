@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wind, ShieldAlert, Cpu, Activity, Play, Layers, BarChart3, HelpCircle, MapPin, HeartPulse } from 'lucide-react';
+import { Wind, ShieldAlert, Cpu, Activity, Layers, BarChart3, HelpCircle, MapPin, HeartPulse } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: string;
@@ -8,7 +8,6 @@ interface HeaderProps {
   setIsDemoMode: (val: boolean) => void;
   selectedLocationId: string;
   onSelectLocation: (locId: string) => void;
-  onRunDemoEpisode?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -17,8 +16,7 @@ export const Header: React.FC<HeaderProps> = ({
   isDemoMode,
   setIsDemoMode,
   selectedLocationId,
-  onSelectLocation,
-  onRunDemoEpisode
+  onSelectLocation
 }) => {
   const locations = [
     { id: 'DELHI', name: 'Delhi NCR (Central / Anand Vihar)' },
@@ -91,18 +89,8 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => setIsDemoMode(!isDemoMode)}
             className="text-xs font-medium px-3 py-1.5 rounded border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 transition-colors"
           >
-            Switch to {isDemoMode ? 'Live Data Mode' : 'Demo Winter Episode'}
+            Switch to {isDemoMode ? 'Live Data Mode' : 'Demo Dataset Mode'}
           </button>
-
-          {onRunDemoEpisode && (
-            <button
-              onClick={onRunDemoEpisode}
-              className="text-xs font-semibold px-3 py-1.5 rounded bg-blue-700 hover:bg-blue-800 text-white shadow-sm flex items-center space-x-1 transition-colors"
-            >
-              <Play className="w-3.5 h-3.5" />
-              <span>Play 72h Episode</span>
-            </button>
-          )}
         </div>
       </div>
 

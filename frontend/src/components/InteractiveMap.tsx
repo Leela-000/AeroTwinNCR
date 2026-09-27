@@ -67,9 +67,9 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
   const plumeLine = plumePoints.map(p => [p.lat, p.lon] as [number, number]);
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 h-full flex flex-col">
+    <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-4 h-full min-h-[500px] flex flex-col justify-between">
       {/* Map Control Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-3 border-b border-slate-100">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-3 border-b border-slate-100 flex-shrink-0">
         <div className="flex items-center space-x-2">
           <Layers className="w-5 h-5 text-blue-900" />
           <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wide">
@@ -101,13 +101,14 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         </div>
       </div>
 
-      {/* Map Container */}
-      <div className="relative flex-1 min-h-[420px] rounded-lg overflow-hidden border border-slate-200">
+      {/* Grounded Map Container */}
+      <div className="relative flex-1 w-full min-h-[440px] rounded-lg overflow-hidden border border-slate-200 bg-slate-100">
         <MapContainer
           center={[28.6139, 77.2090]}
           zoom={9}
           scrollWheelZoom={false}
-          className="w-full h-full"
+          className="w-full h-full min-h-[440px] z-10"
+          style={{ height: '100%', minHeight: '440px', width: '100%' }}
         >
           {/* Light CartoDB map tiles */}
           <TileLayer

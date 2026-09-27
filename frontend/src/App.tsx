@@ -21,16 +21,12 @@ import { ScenarioLabSection } from './components/ScenarioLabSection';
 import { ValidationSection } from './components/ValidationSection';
 import { ComparisonSection } from './components/ComparisonSection';
 import { WRFChemSection } from './components/WRFChemSection';
-import { DemoControls } from './components/DemoControls';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [isDemoMode, setIsDemoMode] = useState<boolean>(true);
   const [selectedLocationId, setSelectedLocationId] = useState<string>('DELHI');
   const [selectedHour, setSelectedHour] = useState<number>(24);
-
-  const [currentDemoStep, setCurrentDemoStep] = useState<number>(24);
-  const [isPlayingDemo, setIsPlayingDemo] = useState<boolean>(false);
 
   const [observations, setObservations] = useState<AirQualityObs[]>([]);
   const [fireHotspots, setFireHotspots] = useState<FireHotspot[]>([]);
@@ -63,22 +59,6 @@ export const App: React.FC = () => {
     loadData();
   }, [selectedLocationId, selectedHour]);
 
-  useEffect(() => {
-    let timer: any = null;
-    if (isPlayingDemo) {
-      timer = setInterval(() => {
-        setCurrentDemoStep(prev => {
-          const next = prev >= 72 ? 0 : prev + 12;
-          setSelectedHour(next === 0 ? 1 : next);
-          return next;
-        });
-      }, 3500);
-    }
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  }, [isPlayingDemo]);
-
   const currentStationObs = observations.find(o => o.station_id.toUpperCase() === selectedLocationId.toUpperCase()) || observations[0];
   const firstPtWeather = forecast?.forecast_points[0]?.weather_snapshot;
   const firstPtPhysics = forecast?.forecast_points[0]?.coupled_features;
@@ -106,31 +86,16 @@ export const App: React.FC = () => {
         setIsDemoMode={setIsDemoMode}
         selectedLocationId={selectedLocationId}
         onSelectLocation={setSelectedLocationId}
-        onRunDemoEpisode={() => {
-          setIsPlayingDemo(true);
-          setActiveTab('dashboard');
-        }}
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {isDemoMode && (
-          <DemoControls
-            currentDemoStep={currentDemoStep}
-            setCurrentDemoStep={(step) => {
-              setCurrentDemoStep(step);
-              setSelectedHour(step === 0 ? 1 : step);
-            }}
-            isPlaying={isPlayingDemo}
-            setIsPlaying={setIsPlayingDemo}
-          />
-        )}
-
         {activeTab === 'dashboard' && (
           <>
             <TopCards currentObs={currentStationObs} forecast={forecast} />
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
-              <div className="lg:col-span-5 h-[520px]">
+            {/* Split Screen Grid Layout — Grounded Map & Forecast Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6 items-stretch">
+              <div className="lg:col-span-5 h-full min-h-[500px] flex flex-col">
                 <InteractiveMap
                   observations={observations}
                   fireHotspots={fireHotspots}
@@ -140,7 +105,7 @@ export const App: React.FC = () => {
                 />
               </div>
 
-              <div className="lg:col-span-7">
+              <div className="lg:col-span-7 flex flex-col">
                 <ForecastSection
                   forecast={forecast}
                   observations={observations}
